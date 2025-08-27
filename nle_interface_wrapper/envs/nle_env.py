@@ -70,7 +70,8 @@ def create_env(env_name, cfg, env_config, render_mode=None):
     env = NoProgressAbort(env)
     env = AutoMore(env)
 
-    # env = NLEInterfaceWrapper(env)
+    env = NLEInterfaceWrapper(env)
+
     if cfg.play_mode == "language":
         env = PlayLanguage(env)
     elif cfg.play_mode == "nle":

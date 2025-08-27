@@ -35,10 +35,14 @@ setup(
     project_urls={},
     install_requires=[
         "gymnasium==0.29.0",
+        "inflect",
+        "scipy",
+        "pillow",
     ],
     extras_require={
         # some tests require Atari and Mujoco so let's make sure dev environment has that
-        "dev": ["black", "isort>=5.12", "pytest<8.0", "flake8", "pre-commit", "twine"] + _docs_deps,
+        "dev": ["black", "isort>=5.12", "pytest<8.0", "flake8", "pre-commit", "twine"]
+        + _docs_deps,
     },
     package_dir={"": "./"},
     packages=setuptools.find_packages(where="./", include=["nle_interface_wrapper*"]),
