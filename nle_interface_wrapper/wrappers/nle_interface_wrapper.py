@@ -1,14 +1,11 @@
-from collections import namedtuple
-from functools import partial
-from string import ascii_lowercase, ascii_uppercase
 from typing import Any, List, Tuple, Union
 
 import gymnasium as gym
 import numpy as np
 from nle import nethack, nle_language_obsv
-from nle.language_wrapper.wrappers import nle_language_wrapper
 from nle.nethack import actions as A
 
+from nle_interface_wrapper.interface.blstats import BLStats
 from nle_interface_wrapper.interface.character import Character
 from nle_interface_wrapper.interface.entity import Entity
 from nle_interface_wrapper.interface.glyph import G
@@ -18,23 +15,11 @@ from nle_interface_wrapper.interface.trap_tracker import TrapTracker
 from nle_interface_wrapper.interface.utils import isin
 from nle_interface_wrapper.spaces import Strings
 
-BLStats = namedtuple(
-    "BLStats",
-    "x y strength_percentage strength dexterity constitution intelligence wisdom charisma score hitpoints max_hitpoints depth gold energy max_energy armor_class monster_level experience_level experience_points time hunger_state carrying_capacity dungeon_number level_number prop_mask align_bits",
-)
-
 
 class NLEInterfaceWrapper(gym.Wrapper):
     def __init__(self, env: gym.Env) -> None:
         super().__init__(env)
-
         self.nle_language = nle_language_obsv.NLELanguageObsv()
-
-        # self.map = Map()
-        self.inventory = Inventory()
-        self.item_database = ItemDatabase()
-        # self.character = Character()
-        # self.trap_tracker = TrapTracker()
 
     def update(self):
         internal = self.env.unwrapped.last_observation[self.env.unwrapped._internal_index]
@@ -61,21 +46,31 @@ class NLEInterfaceWrapper(gym.Wrapper):
                 self.item_database,
             )
 
+        # update map
+        self.map.update(self.blstats, self.message, self.glyphs, self.entity, self.entities)
+
         # update trap tracker
         # self.trap_tracker.update(self.entity.position, self.get_entity(self.last_obs).position, self.message)
-
-        # update map
-        # self.map.update()
 
         # update character
         # self.character.update()
 
+    def pre_reset(self):
+        self.map = Map()
+        self.inventory = Inventory()
+        self.item_database = ItemDatabase()
+        # self.character = Character()
+        # self.trap_tracker = TrapTracker()
+
     def reset(self, **kwargs):
+        self.pre_reset()
+
         self.obs, self.info = self.env.reset(**kwargs)
         self.last_obs = self.obs
 
         self.update()
         self.last_obs = self.obs
+        self.start_glyph = self.entity.glyph
 
         return self.post_reset(self.obs), self.info
 
@@ -98,7 +93,8 @@ class NLEInterfaceWrapper(gym.Wrapper):
         glyphs = self.get_glyphs(obs)
         cursor = self.get_cursor(obs)
 
-        print(str(self.inventory))
+        # print(str(self.inventory))
+        print(str(self.map))
 
         return {
             **obs,
@@ -106,7 +102,7 @@ class NLEInterfaceWrapper(gym.Wrapper):
             "text_blstats": self.nle_language.text_blstats(blstats).decode("latin-1"),
             "text_cursor": self.nle_language.text_cursor(glyphs, blstats, cursor).decode("latin-1"),
             "text_inventory": str(self.inventory),
-            # "text_map": str(self.map),
+            "text_map": str(self.map),
         }
 
     def get_blstats(self, last_obs) -> BLStats:
