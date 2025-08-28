@@ -2,7 +2,6 @@ import gymnasium as gym
 import nle  # NOQA: F401
 from gymnasium import registry
 from nle import nethack
-from nle.nethack import NETHACKOPTIONS
 
 from nle_interface_wrapper.wrappers import (
     AddTextInventory,
@@ -75,7 +74,6 @@ def create_env(env_name, cfg, env_config, render_mode=None):
     env = Properties(env)
     env = AddTextInventory(env)
     env = AddTextMap(env)
-    # env = AddTextCharacter(env)
 
     if cfg.play_mode == "language":
         env = PlayLanguage(env)
