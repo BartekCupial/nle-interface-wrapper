@@ -5,8 +5,8 @@ import numpy as np
 from PIL import Image
 from scipy import ndimage
 
-from nle_interface_wrapper.interface.glyph import SS, G
-from nle_interface_wrapper.interface.utils import isin
+from nle_interface_wrapper.wrappers.properties.glyph import SS, G
+from nle_interface_wrapper.wrappers.properties.utils import isin
 
 
 def print_boolean_array_ascii(arr):

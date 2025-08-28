@@ -5,9 +5,9 @@ import numpy as np
 from nle import nethack
 from numpy import int64, ndarray
 
-from nle_interface_wrapper.interface import utils
-from nle_interface_wrapper.interface.blstats import BLStats
-from nle_interface_wrapper.interface.glyph import SS, C, G
+from nle_interface_wrapper.wrappers.properties import utils
+from nle_interface_wrapper.wrappers.properties.blstats import BLStats
+from nle_interface_wrapper.wrappers.properties.glyph import SS, C, G
 
 
 class SafeAccess:

@@ -7,13 +7,13 @@ import numpy as np
 from nle.nethack import actions as A
 from scipy import ndimage
 
-from nle_interface_wrapper.interface.blstats import BLStats
-from nle_interface_wrapper.interface.entity import Entity
-from nle_interface_wrapper.interface.glyph import SHOP, G
-from nle_interface_wrapper.interface.utils import isin
 from nle_interface_wrapper.wrappers.map.label import corridor_detection, room_detection
 from nle_interface_wrapper.wrappers.map.level import Level
 from nle_interface_wrapper.wrappers.map.utils import get_revelable_positions
+from nle_interface_wrapper.wrappers.properties.blstats import BLStats
+from nle_interface_wrapper.wrappers.properties.entity import Entity
+from nle_interface_wrapper.wrappers.properties.glyph import SHOP, G
+from nle_interface_wrapper.wrappers.properties.utils import isin
 
 
 class AddTextMap(gym.Wrapper):

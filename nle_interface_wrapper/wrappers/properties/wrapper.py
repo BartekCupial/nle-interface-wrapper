@@ -4,10 +4,10 @@ import gymnasium as gym
 import numpy as np
 from nle import nethack
 
-from nle_interface_wrapper.interface.blstats import BLStats
-from nle_interface_wrapper.interface.entity import Entity
-from nle_interface_wrapper.interface.glyph import G
-from nle_interface_wrapper.interface.utils import isin
+from nle_interface_wrapper.wrappers.properties.blstats import BLStats
+from nle_interface_wrapper.wrappers.properties.entity import Entity
+from nle_interface_wrapper.wrappers.properties.glyph import G
+from nle_interface_wrapper.wrappers.properties.utils import isin
 
 
 class Properties(gym.Wrapper):
@@ -160,8 +160,3 @@ class Properties(gym.Wrapper):
     def poly(self):
         """Polymorphed"""
         return self.start_glyph != self.entity.glyph
-
-    # @property
-    # def trap(self) -> bool:
-    #     """Trapped"""
-    #     return self.trap_tracker.trapped
