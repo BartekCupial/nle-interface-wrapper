@@ -5,13 +5,14 @@ from nle import nethack
 from nle.nethack import NETHACKOPTIONS
 
 from nle_interface_wrapper.wrappers import (
+    AddTextInventory,
     AutoMore,
     AutoRender,
     AutoSeed,
-    NLEInterfaceWrapper,
     NoProgressAbort,
     PlayLanguage,
     PlayNLE,
+    Properties,
 )
 
 NETHACK_ENVS = [env_spec.id for env_spec in registry.values() if "NetHack" in env_spec.id]
@@ -70,7 +71,10 @@ def create_env(env_name, cfg, env_config, render_mode=None):
     env = NoProgressAbort(env)
     env = AutoMore(env)
 
-    env = NLEInterfaceWrapper(env)
+    env = Properties(env)
+    env = AddTextInventory(env)
+    # env = AddTextCharacter(env)
+    # env = AddTextMap(env)
 
     if cfg.play_mode == "language":
         env = PlayLanguage(env)

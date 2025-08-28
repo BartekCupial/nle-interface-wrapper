@@ -3,11 +3,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Dict, List
 
-from nle_interface_wrapper.interface.inventory.objects import GLYPH_TO_OBJ_NAME, NAME_TO_GLYPHS
-from nle_interface_wrapper.interface.inventory.properties import ItemCategory
+from nle_interface_wrapper.wrappers.inventory.objects import GLYPH_TO_OBJ_NAME, NAME_TO_GLYPHS
+from nle_interface_wrapper.wrappers.inventory.properties import ItemCategory
 
 if TYPE_CHECKING:
-    from nle_interface_wrapper.interface.inventory.item import Item
+    from nle_interface_wrapper.wrappers.inventory.item import Item
 
 
 def flatten_single_element_list(list_of_lists):

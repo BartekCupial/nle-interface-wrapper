@@ -2,8 +2,8 @@ import re
 
 import inflect
 
-from nle_interface_wrapper.interface.inventory.objects import name_to_monsters, scrolls
-from nle_interface_wrapper.interface.inventory.properties import (
+from nle_interface_wrapper.wrappers.inventory.objects import name_to_monsters, scrolls
+from nle_interface_wrapper.wrappers.inventory.properties import (
     ItemBeatitude,
     ItemCategory,
     ItemEnchantment,

@@ -3,10 +3,10 @@ from __future__ import annotations
 import re
 from typing import Dict, List
 
-from nle_interface_wrapper.interface.inventory.item import Item
-from nle_interface_wrapper.interface.inventory.item_database import ItemDatabase
-from nle_interface_wrapper.interface.inventory.item_parser import ItemParser
-from nle_interface_wrapper.interface.inventory.properties import ArmorClass, ItemCategory
+from nle_interface_wrapper.wrappers.inventory.item import Item
+from nle_interface_wrapper.wrappers.inventory.item_database import ItemDatabase
+from nle_interface_wrapper.wrappers.inventory.item_parser import ItemParser
+from nle_interface_wrapper.wrappers.inventory.properties import ArmorClass, ItemCategory
 
 
 class Inventory:

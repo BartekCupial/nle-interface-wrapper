@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from nle import nethack as nh
 
-from nle_interface_wrapper.interface.inventory.properties import ArmorClass, ItemCategory
+from nle_interface_wrapper.wrappers.inventory.properties import ArmorClass, ItemCategory
 
 # collect all objects by their class
 class_to_objects = defaultdict(list)

@@ -2,24 +2,36 @@ from typing import Any, List, Tuple, Union
 
 import gymnasium as gym
 import numpy as np
-from nle import nethack, nle_language_obsv
-from nle.nethack import actions as A
+from nle import nethack
 
 from nle_interface_wrapper.interface.blstats import BLStats
-from nle_interface_wrapper.interface.character import Character
 from nle_interface_wrapper.interface.entity import Entity
 from nle_interface_wrapper.interface.glyph import G
-from nle_interface_wrapper.interface.inventory import Inventory, ItemDatabase
-from nle_interface_wrapper.interface.map import Map
-from nle_interface_wrapper.interface.trap_tracker import TrapTracker
 from nle_interface_wrapper.interface.utils import isin
-from nle_interface_wrapper.spaces import Strings
 
 
-class NLEInterfaceWrapper(gym.Wrapper):
-    def __init__(self, env: gym.Env) -> None:
+class Properties(gym.Wrapper):
+    def __init__(self, env: gym.Env):
         super().__init__(env)
-        self.nle_language = nle_language_obsv.NLELanguageObsv()
+
+    def reset(self, **kwargs):
+        self.obs, self.info = self.env.reset(**kwargs)
+        self.last_obs = self.obs
+
+        self.update()
+        self.last_obs = self.obs
+        self.start_glyph = self.entity.glyph
+
+        return self.obs, self.info
+
+    def step(self, action):
+        self.obs, reward, terminated, truncated, self.info = self.env.step(action)
+        self.last_obs = self.obs
+
+        self.update()
+        self.last_obs = self.obs
+
+        return self.obs, reward, terminated, truncated, self.info
 
     def update(self):
         internal = self.env.unwrapped.last_observation[self.env.unwrapped._internal_index]
@@ -35,75 +47,6 @@ class NLEInterfaceWrapper(gym.Wrapper):
         self.cursor = self.get_cursor(self.obs)
         self.entity = self.get_entity(self.obs)
         self.entities = self.get_entities(self.obs)
-
-        # update inventory
-        if not self.hallu and not self.blind:
-            self.inventory.update(
-                self.obs["inv_strs"],
-                self.obs["inv_letters"],
-                self.obs["inv_oclasses"],
-                self.obs["inv_glyphs"],
-                self.item_database,
-            )
-
-        # update map
-        self.map.update(self.blstats, self.message, self.glyphs, self.entity, self.entities)
-
-        # update trap tracker
-        # self.trap_tracker.update(self.entity.position, self.get_entity(self.last_obs).position, self.message)
-
-        # update character
-        # self.character.update()
-
-    def pre_reset(self):
-        self.map = Map()
-        self.inventory = Inventory()
-        self.item_database = ItemDatabase()
-        # self.character = Character()
-        # self.trap_tracker = TrapTracker()
-
-    def reset(self, **kwargs):
-        self.pre_reset()
-
-        self.obs, self.info = self.env.reset(**kwargs)
-        self.last_obs = self.obs
-
-        self.update()
-        self.last_obs = self.obs
-        self.start_glyph = self.entity.glyph
-
-        return self.post_reset(self.obs), self.info
-
-    def post_reset(self, obs):
-        return self.populate_obs(obs)
-
-    def step(self, action):
-        self.obs, reward, terminated, truncated, self.info = self.env.step(action)
-
-        self.update()
-        self.last_obs = self.obs
-
-        return self.post_step(self.obs), reward, terminated, truncated, self.info
-
-    def post_step(self, obs):
-        return self.populate_obs(obs)
-
-    def populate_obs(self, obs):
-        blstats = self.get_blstats(obs)
-        glyphs = self.get_glyphs(obs)
-        cursor = self.get_cursor(obs)
-
-        # print(str(self.inventory))
-        print(str(self.map))
-
-        return {
-            **obs,
-            "text_glyphs": self.nle_language.text_glyphs(glyphs, blstats).decode("latin-1"),
-            "text_blstats": self.nle_language.text_blstats(blstats).decode("latin-1"),
-            "text_cursor": self.nle_language.text_cursor(glyphs, blstats, cursor).decode("latin-1"),
-            "text_inventory": str(self.inventory),
-            "text_map": str(self.map),
-        }
 
     def get_blstats(self, last_obs) -> BLStats:
         return BLStats(*last_obs["blstats"])
@@ -218,7 +161,7 @@ class NLEInterfaceWrapper(gym.Wrapper):
         """Polymorphed"""
         return self.start_glyph != self.entity.glyph
 
-    @property
-    def trap(self) -> bool:
-        """Trapped"""
-        return self.trap_tracker.trapped
+    # @property
+    # def trap(self) -> bool:
+    #     """Trapped"""
+    #     return self.trap_tracker.trapped

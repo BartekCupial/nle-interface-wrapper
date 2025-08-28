@@ -4,8 +4,8 @@ from typing import Optional
 
 from nle import nethack as nh
 
-from nle_interface_wrapper.interface.inventory.item_database import ItemClass
-from nle_interface_wrapper.interface.inventory.properties import (
+from nle_interface_wrapper.wrappers.inventory.item_database import ItemClass
+from nle_interface_wrapper.wrappers.inventory.properties import (
     ArmorClass,
     GemClass,
     ItemBeatitude,
