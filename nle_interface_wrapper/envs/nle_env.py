@@ -6,6 +6,7 @@ from nle import nethack
 from nle_interface_wrapper.wrappers import (
     AddTextInventory,
     AddTextMap,
+    AddTextOverview,
     AutoMore,
     AutoRender,
     AutoSeed,
@@ -72,8 +73,9 @@ def create_env(env_name, cfg, env_config, render_mode=None):
     env = AutoMore(env)
 
     env = Properties(env)
-    env = AddTextInventory(env)
+    env = AddTextOverview(env)
     env = AddTextMap(env)
+    env = AddTextInventory(env)
 
     if cfg.play_mode == "language":
         env = PlayLanguage(env)

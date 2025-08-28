@@ -5,7 +5,7 @@ import re
 
 from nle import nethack as nh
 
-from nle_interface_wrapper.wrappers.character.skill import Skill
+from nle_interface_wrapper.wrappers.skills.skill import Skill
 
 
 class ItemCategory(enum.Enum):

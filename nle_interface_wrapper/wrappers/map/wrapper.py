@@ -20,20 +20,6 @@ class AddTextMap(gym.Wrapper):
     def __init__(self, env):
         super().__init__(env)
 
-    def cache_overview(self):
-        obs, *_ = self.env.step(self.env.actions.index(A.Command.OVERVIEW))
-        blstats: BLStats = self.get_blstats(obs)
-        message: str = self.get_message(obs)
-
-        self.overview = {
-            "message": message,
-            "dungeon_number": blstats.dungeon_number,
-            "depth": blstats.depth,
-        }
-
-    def get_cached_overview(self):
-        return self.overview["message"] if self.overview else ""
-
     def cache_terrain(self):
         self.env.step(self.env.actions.index(ord("#")))
         self.env.step(self.env.actions.index(ord("t")))
@@ -51,16 +37,13 @@ class AddTextMap(gym.Wrapper):
     def reset(self, **kwargs):
         obs, info = self.env.reset(**kwargs)
 
-        self.overview = {}
         self.terrain_features = defaultdict(dict)
         self.shops = defaultdict(list)
         self.levels = {}
         self.map_description = ""
-        self.overview = {}
 
         self.update()
 
-        self.cache_overview()
         self.cache_terrain()
 
         return self.populate_obs(obs), info
@@ -71,10 +54,6 @@ class AddTextMap(gym.Wrapper):
         self.update()
 
         blstats: BLStats = self.env.get_wrapper_attr("blstats")
-        # update the overview when we go to a new level
-        if (blstats.dungeon_number, blstats.depth) != (self.overview["dungeon_number"], self.overview["depth"]):
-            self.cache_overview()
-
         # update terrain features every 50 turns
         last_time = self.terrain_features[(blstats.dungeon_number, blstats.level_number)].get("time", 0)
         if blstats.time - last_time > 50:
@@ -324,13 +303,6 @@ class AddTextMap(gym.Wrapper):
             rooms_info.append(room_info)
 
         desc = []
-        # overview = self.get_cached_overview()
-        # if overview:
-        #     desc.append("Dungeon overview:")
-        #     desc.extend(overview.split("\n"))
-
-        # desc.append("Local map:")
-
         for room_info in rooms_info:
             room_id = room_info["room_id"]
             explored = room_info["explored"]
