@@ -20,3 +20,36 @@ pre-commit install
 ```bash
 python -m nle_interface_wrapper.scripts.play --env NetHackScore-v0 --seed 42 --play-mode nle
 ```
+
+### Potential additions for tracking state in nethack:
+- intrinsics - https://nethackwiki.com/wiki/Property#Intrinsic_properties
+some of them can be easily tracked with messages https://nethackwiki.com/wiki/You_feel 
+    - Disintegration resistance
+    - Warning
+    - Poison resistance
+    - Fire resistance
+    - Cold resistance
+    - Sleep resistance
+    - Shock resistance
+    - Invisible
+    - See invisible
+    - Protection
+    - Searching
+    - Speed
+    - Teleportitis
+    - Teleport control
+    - Telepathy
+
+- extrinsics - https://nethackwiki.com/wiki/Property#Extrinsic_properties notable
+    - reflection
+    - magic resistance
+    - life saving
+    - waterwalking
+
+- prayer - factors that affect prayer in NetHack
+    - prayer timeout (starts at 300, then is a random number~[200,1000])
+    - alignment record (negative don't pray)
+    - luck (negarive don't pray)
+    - gods anger (if angry don't pray)
+    - polymorphy (don't pray when undead or a demon)
+    - gehennom (don't pray in hell)
