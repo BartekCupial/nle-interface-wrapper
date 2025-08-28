@@ -554,7 +554,7 @@ class CharacterSkills:
         inv_skill_type = {v: k for k, v in self.name_to_skill_type.items()}
         inv_skill_level = {v: k for k, v in self.name_to_skill_level.items()}
         return list(
-            inv_skill_type[Skill(skill_type)] + "-" + inv_skill_level[level]
+            inv_skill_type[Skill(skill_type)] + ": " + inv_skill_level[level]
             for skill_type, level in enumerate(self.skill_levels)
             if level in inv_skill_level and Skill(skill_type) in inv_skill_type and level != 0
         )

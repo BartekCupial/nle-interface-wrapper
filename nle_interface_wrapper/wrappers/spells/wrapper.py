@@ -35,7 +35,6 @@ class AddTextSpells(gym.Wrapper):
         return self.populate_obs(obs), reward, terminated, truncated, info
 
     def populate_obs(self, obs):
-        print(str(self))
         return {**obs, "text_known_spells": str(self)}
 
     def update(self):

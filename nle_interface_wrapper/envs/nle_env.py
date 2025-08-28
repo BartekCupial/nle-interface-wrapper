@@ -7,6 +7,7 @@ from nle_interface_wrapper.wrappers import (
     AddTextInventory,
     AddTextMap,
     AddTextOverview,
+    AddTextSkills,
     AddTextSpells,
     AutoMore,
     AutoRender,
@@ -78,6 +79,7 @@ def create_env(env_name, cfg, env_config, render_mode=None):
     env = AddTextMap(env)
     env = AddTextInventory(env)
     env = AddTextSpells(env)
+    env = AddTextSkills(env)
 
     if cfg.play_mode == "language":
         env = PlayLanguage(env)

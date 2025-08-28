@@ -1,0 +1,1 @@
+from nle_interface_wrapper.wrappers.skills.wrapper import AddTextSkills
