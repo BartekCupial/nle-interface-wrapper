@@ -5,6 +5,8 @@ Interface Wrapper for [Nethack Learning Environment (NLE)](https://github.com/fa
 ### Installation
 
 ```
+MINOR=$(python3 -c 'import sys; print(f"cp{sys.version_info.major}{sys.version_info.minor}")')
+pip install "https://github.com/BartekCupial/nle/releases/download/v1.2.1/nle-1.2.0-${MINOR}-${MINOR}-manylinux_2_17_$(uname -m).manylinux2014_$(uname -m).whl"
 pip install -e .[dev]
 ```
 

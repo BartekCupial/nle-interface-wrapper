@@ -34,7 +34,6 @@ setup(
     keywords="reinforcement learning ai nlp llm code",
     project_urls={},
     install_requires=[
-        "nle>=1.0",
         "gymnasium==0.29.0",
         "inflect",
         "scipy",
