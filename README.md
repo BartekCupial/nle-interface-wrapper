@@ -16,7 +16,7 @@ pre-commit install
 ### How to play nethack with this wrapper?
 
 ```bash
-python -m nle_interface_wrapper.scripts.play --env NetHackScore-v0 --seed 42 --play-mode nle
+python -m nle_interface_wrapper.scripts.play --env NetHackScore-v0 --seed 42 --character @
 ```
 
 ### How to use?
