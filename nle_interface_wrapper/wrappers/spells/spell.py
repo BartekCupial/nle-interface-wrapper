@@ -1,0 +1,57 @@
+from collections import namedtuple
+
+Spell = namedtuple("Spell", ["letter", "name", "level", "category", "fail", "retention"])
+
+
+ALL_SPELL_NAMES = [
+    "force bolt",
+    "drain life",
+    "magic missile",
+    "cone of cold",
+    "fireball",
+    "finger of death",
+    "protection",
+    "create monster",
+    "remove curse",
+    "create familiar",
+    "turn undead",
+    "detect monsters",
+    "light",
+    "detect food",
+    "clairvoyance",
+    "detect unseen",
+    "identify",
+    "detect treasure",
+    "magic mapping",
+    "sleep",
+    "confuse monster",
+    "slow monster",
+    "cause fear",
+    "charm monster",
+    "jumping",
+    "haste self",
+    "invisibility",
+    "levitation",
+    "teleport away",
+    "healing",
+    "cure blindness",
+    "cure sickness",
+    "extra healing",
+    "stone to flesh",
+    "restore ability",
+    "knock",
+    "wizard lock",
+    "dig",
+    "polymorph",
+    "cancellation",
+]
+
+ALL_SPELL_CATEGORIES = [
+    "attack",
+    "healing",
+    "divination",
+    "enchantment",
+    "clerical",
+    "escape",
+    "matter",
+]
