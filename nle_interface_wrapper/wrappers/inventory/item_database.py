@@ -1,13 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Dict, List
+from typing import Dict, List
 
-from nle_interface_wrapper.wrappers.inventory.objects import GLYPH_TO_OBJ_NAME, NAME_TO_GLYPHS
+from nle_interface_wrapper.wrappers.inventory.objects import NAME_TO_GLYPHS
 from nle_interface_wrapper.wrappers.inventory.properties import ItemCategory
-
-if TYPE_CHECKING:
-    from nle_interface_wrapper.wrappers.inventory.item import Item
 
 
 def flatten_single_element_list(list_of_lists):
@@ -51,14 +48,8 @@ class ItemClass:
         """Returns True if the item has exactly one possible identification"""
         return len(self.candidate_ids) == 1
 
-    def get_candidate_names(self) -> List[str]:
-        """Returns list of possible item names based on candidate IDs"""
-        return [GLYPH_TO_OBJ_NAME[item_id] for item_id in self.candidate_ids]
-
     def __str__(self) -> str:
-        if self.is_identified:
-            return "".join(self.get_candidate_names())
-        return f"{self.name}: {'; '.join(self.get_candidate_names())}"
+        return f"{self.name}"
 
     def update_candidates(self, new_candidate_ids: List[int]):
         """Updates candidate IDs to intersection of current and new possibilities"""

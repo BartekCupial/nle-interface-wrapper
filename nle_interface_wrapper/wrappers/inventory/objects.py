@@ -14,7 +14,6 @@ for glyph in range(nh.GLYPH_OBJ_OFF, nh.NUM_OBJECTS + nh.GLYPH_OBJ_OFF):
 
 
 NAME_TO_OBJECTS = defaultdict(list)
-GLYPH_TO_OBJ_NAME = dict()
 
 
 def add_obj(key, obj, glyph, prefixes=[""], suffixes=[""]):
@@ -24,17 +23,6 @@ def add_obj(key, obj, glyph, prefixes=[""], suffixes=[""]):
         for prefix in prefixes:
             for suffix in suffixes:
                 NAME_TO_OBJECTS[prefix + key + suffix].append((obj, glyph))
-
-
-def add_glyph_to_obj_name(glyph, obj_name, prefixes=[""], suffixes=[""]):
-    assert isinstance(prefixes, list)
-    assert isinstance(suffixes, list)
-    assert len(prefixes) == 1
-    assert len(suffixes) == 1
-    if obj_name:
-        for prefix in prefixes:
-            for suffix in suffixes:
-                GLYPH_TO_OBJ_NAME[glyph] = prefix + obj_name + suffix
 
 
 for glyph in range(nh.GLYPH_OBJ_OFF, nh.NUM_OBJECTS + nh.GLYPH_OBJ_OFF):
@@ -51,109 +39,26 @@ for glyph in range(nh.GLYPH_OBJ_OFF, nh.NUM_OBJECTS + nh.GLYPH_OBJ_OFF):
 
     match ItemCategory(ord(obj_class)):
         case ItemCategory.ILLOBJ:
-            add_glyph_to_obj_name(glyph, obj_name)
             add_obj(obj_name, obj, glyph)
             add_obj(obj_description, obj, glyph)
         case ItemCategory.WEAPON:
-            add_glyph_to_obj_name(glyph, obj_name)
             add_obj(obj_name, obj, glyph)
             add_obj(obj_description, obj, glyph)
         case ItemCategory.ARMOR:
-            match ArmorClass(obj.oc_armcat):
-                case ArmorClass.GLOVES:
-                    add_glyph_to_obj_name(glyph, obj_name, ["pair of "])
-                    add_obj(obj_name, obj, glyph, ["pair of "])
-                    shuffle = [
-                        "leather gloves",
-                        "gauntlets of fumbling",
-                        "gauntlets of power",
-                        "gauntlets of dexterity",
-                    ]
-                    if obj_name in shuffle:
-                        for obj, glyph in class_to_objects[obj_class]:
-                            if nh.OBJ_NAME(obj) in shuffle:
-                                add_obj(obj_description, obj, glyph, ["pair of "])
-                    else:
-                        add_obj(obj_description, obj, glyph, ["pair of "])
-                case ArmorClass.BOOTS:
-                    add_glyph_to_obj_name(glyph, obj_name, ["pair of "])
-                    add_obj(obj_name, obj, glyph, ["pair of "])
-                    shuffle = [
-                        "speed boots",
-                        "water walking boots",
-                        "jumping boots",
-                        "elven boots",
-                        "kicking boots",
-                        "fumble boots",
-                        "levitation boots",
-                    ]
-                    if obj_name in shuffle:
-                        for obj, glyph in class_to_objects[obj_class]:
-                            if nh.OBJ_NAME(obj) in shuffle:
-                                add_obj(obj_description, obj, glyph, ["pair of "])
-                    else:
-                        add_obj(obj_description, obj, glyph, ["pair of "])
-                case ArmorClass.CLOAK:
-                    add_glyph_to_obj_name(glyph, obj_name)
-                    add_obj(obj_name, obj, glyph)
-                    shuffle = [
-                        "cloak of protection",
-                        "cloak of invisibility",
-                        "cloak of magic resistance",
-                        "cloak of displacement",
-                    ]
-                    if obj_name in shuffle:
-                        for obj, glyph in class_to_objects[obj_class]:
-                            if nh.OBJ_NAME(obj) in shuffle:
-                                add_obj(obj_description, obj, glyph)
-                    else:
-                        add_obj(obj_description, obj, glyph)
-                case ArmorClass.HELM:
-                    add_glyph_to_obj_name(glyph, obj_name)
-                    add_obj(obj_name, obj, glyph)
-                    shuffle = [
-                        "helmet",
-                        "helm of brilliance",
-                        "helm of opposite alignment",
-                        "helm of telepathy",
-                    ]
-                    if obj_name in shuffle:
-                        for obj, glyph in class_to_objects[obj_class]:
-                            if nh.OBJ_NAME(obj) in shuffle:
-                                add_obj(obj_description, obj, glyph)
-                    elif obj_description in [
-                        "cornuthaum",
-                        "dunce cap",
-                    ]:
-                        if obj_name in shuffle:
-                            for obj, glyph in class_to_objects[obj_class]:
-                                if nh.OBJ_NAME(obj) in [
-                                    "cornuthaum",
-                                    "dunce cap",
-                                ]:
-                                    add_obj(obj_description, obj, glyph)
-                    else:
-                        add_obj(obj_description, obj, glyph)
-                case _:
-                    add_glyph_to_obj_name(glyph, obj_name)
-                    add_obj(obj_name, obj, glyph)
-                    add_obj(obj_description, obj, glyph)
+            add_obj(obj_name, obj, glyph)
+            add_obj(obj_description, obj, glyph)
         case ItemCategory.RING:
-            add_glyph_to_obj_name(glyph, obj_name, ["ring of "])
             add_obj(obj_name, obj, glyph, ["ring of "])
 
             for obj, glyph in class_to_objects[obj_class]:
                 add_obj(obj_description, obj, glyph, suffixes=[" ring"])
         case ItemCategory.AMULET:
             if obj_name in ["Amulet of Yendor"]:
-                add_glyph_to_obj_name(glyph, obj_name)
                 add_obj(obj_name, obj, glyph)
             elif obj_description in ["Amulet of Yendor"]:
-                add_glyph_to_obj_name(glyph, obj_name)
                 add_obj(obj_name, obj, glyph)
                 add_obj(obj_description, obj, glyph)
             else:
-                add_glyph_to_obj_name(glyph, obj_name)
                 add_obj(obj_name, obj, glyph)
                 if obj_name not in ["Amulet of Yendor", "cheap plastic imitation of the Amulet of Yendor"]:
                     for obj, glyph in class_to_objects[obj_class]:
@@ -166,19 +71,15 @@ for glyph in range(nh.GLYPH_OBJ_OFF, nh.NUM_OBJECTS + nh.GLYPH_OBJ_OFF):
                     add_obj(obj_description, obj, glyph, suffixes=[" amulet"])
         case ItemCategory.TOOL:
             if obj_name in ["lenses"]:
-                add_glyph_to_obj_name(glyph, obj_name, ["pair of "])
                 add_obj(obj_name, obj, glyph, ["pair of "])
             else:
-                add_glyph_to_obj_name(glyph, obj_name)
                 add_obj(obj_name, obj, glyph)
 
             add_obj(obj_description, obj, glyph)
         case ItemCategory.COMESTIBLES:
-            add_glyph_to_obj_name(glyph, obj_name)
             add_obj(obj_name, obj, glyph)
             add_obj(obj_description, obj, glyph)
         case ItemCategory.POTION:
-            add_glyph_to_obj_name(glyph, obj_name, ["potion of "])
             add_obj(obj_name, obj, glyph, ["potion of "])
             if obj_name not in ["water"]:
                 for obj, glyph in class_to_objects[obj_class]:
@@ -187,7 +88,6 @@ for glyph in range(nh.GLYPH_OBJ_OFF, nh.NUM_OBJECTS + nh.GLYPH_OBJ_OFF):
             else:
                 add_obj(obj_description, obj, glyph, suffixes=[" potion"])
         case ItemCategory.SCROLL:
-            add_glyph_to_obj_name(glyph, obj_name, ["scroll of "])
             add_obj(obj_name, obj, glyph, ["scroll of "])
             if obj_name not in ["mail", "blank paper"]:
                 for obj, glyph in class_to_objects[obj_class]:
@@ -200,10 +100,8 @@ for glyph in range(nh.GLYPH_OBJ_OFF, nh.NUM_OBJECTS + nh.GLYPH_OBJ_OFF):
                     add_obj(obj_description, obj, glyph, ["scroll labeled "])
         case ItemCategory.SPELLBOOK:
             if obj_name in ["Book of the Dead", "novel"]:
-                add_glyph_to_obj_name(glyph, obj_name)
                 add_obj(obj_name, obj, glyph)
             else:
-                add_glyph_to_obj_name(glyph, obj_name, ["spellbook of "])
                 add_obj(obj_name, obj, glyph, ["spellbook of "])
 
             if obj_description in ["paperback"]:
@@ -216,12 +114,10 @@ for glyph in range(nh.GLYPH_OBJ_OFF, nh.NUM_OBJECTS + nh.GLYPH_OBJ_OFF):
                 else:
                     add_obj(obj_description, obj, glyph, suffixes=[" spellbook"])
         case ItemCategory.WAND:
-            add_glyph_to_obj_name(glyph, obj_name, ["wand of "])
             add_obj(obj_name, obj, glyph, ["wand of "])
             for obj, glyph in class_to_objects[obj_class]:
                 add_obj(obj_description, obj, glyph, suffixes=[" wand"])
         case ItemCategory.COIN:
-            add_glyph_to_obj_name(glyph, obj_name)
             add_obj(obj_name, obj, glyph)
             add_obj(obj_description, obj, glyph)
         case ItemCategory.GEM:
@@ -231,36 +127,28 @@ for glyph in range(nh.GLYPH_OBJ_OFF, nh.NUM_OBJECTS + nh.GLYPH_OBJ_OFF):
                 "touchstone",
                 "rock",
             ]:
-                add_glyph_to_obj_name(glyph, obj_name)
                 add_obj(obj_name, obj, glyph)
                 add_obj(obj_description, obj, glyph, suffixes=[" stone"])
             elif obj_name in ["flint"]:
-                add_glyph_to_obj_name(glyph, obj_name, suffixes=[" stone"])
                 add_obj(obj_name, obj, glyph, suffixes=[" stone"])
                 add_obj(obj_description, obj, glyph, suffixes=[" stone"])
             else:
-                add_glyph_to_obj_name(glyph, obj_name)
                 add_obj(obj_name, obj, glyph)
                 add_obj(obj_description, obj, glyph, suffixes=[" gem"])
         case ItemCategory.ROCK:
             # only boulder and statue
-            add_glyph_to_obj_name(glyph, obj_name)
             add_obj(obj_name, obj, glyph)
             add_obj(obj_description, obj, glyph, suffixes=[" stone"])
         case ItemCategory.BALL:
-            add_glyph_to_obj_name(glyph, obj_name)
             add_obj(obj_name, obj, glyph)  # heavy iron ball
             add_obj(obj_name, obj, glyph, ["very "])  # very heavy iron ball
         case ItemCategory.CHAIN:
-            add_glyph_to_obj_name(glyph, obj_name)
             add_obj(obj_name, obj, glyph)  # only iron chain
         case ItemCategory.VENOM:
             # only blinding venom, acid venom
-            add_glyph_to_obj_name(glyph, obj_name)
             add_obj(obj_name, obj, glyph)
             add_obj(obj_description, obj, glyph)
         case _:
-            add_glyph_to_obj_name(glyph, obj_name)
             add_obj(obj_name, obj, glyph)
             add_obj(obj_description, obj, glyph)
 

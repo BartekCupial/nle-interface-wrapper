@@ -166,6 +166,10 @@ class ItemParser:
         if plural_word.startswith("scrolls"):
             plural_word = plural_word.replace("scrolls", "scroll", 1)
 
+        if plural_word.startswith("pair of "):
+            plural_word = plural_word.replace("pair of ", "", 1)
+            return plural_word
+
         # Handle scrolls
         for name in scrolls:
             if name in plural_word:

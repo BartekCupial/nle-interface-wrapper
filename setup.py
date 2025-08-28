@@ -34,10 +34,13 @@ setup(
     keywords="reinforcement learning ai nlp llm code",
     project_urls={},
     install_requires=[
+        "nle>=1.0",
         "gymnasium==0.29.0",
         "inflect",
         "scipy",
         "pillow",
+        "tyro",
+        "numba",
     ],
     extras_require={
         # some tests require Atari and Mujoco so let's make sure dev environment has that
