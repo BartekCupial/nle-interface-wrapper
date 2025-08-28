@@ -25,7 +25,7 @@ python -m nle_interface_wrapper.scripts.play --env NetHackScore-v0 --seed 42 --c
 import gymnasium as gym
 import nle
 
-from nle_interface_wrapper.wrappers import Properties, AddTextMap, AddTextOverview, AddTextInventory, AddTextSpells, AddTextSkills, AutoMore
+from nle_interface_wrapper.wrappers import Properties, AddTextMap, AddTextOverview, AddTextInventory, AddTextSpells, AddTextSkills, AddTextPrayer, AutoMore
 
 env = gym.make("NetHackChallenge-v0")
 env = AutoMore(env)
@@ -36,6 +36,7 @@ env = AddTextMap(env)
 env = AddTextInventory(env)
 env = AddTextSpells(env)
 env = AddTextSkills(env)
+env = AddTextPrayer(env)
 
 obs, info = env.reset()
 print(obs["text_overview"])
@@ -43,6 +44,7 @@ print(obs["text_map"])
 print(obs["text_inventory"])
 print(obs["text_spells"])
 print(obs["text_skills"])
+print(obs["text_prayer"])
 ```
 
 example output
@@ -71,6 +73,9 @@ comestibles:
 
 >>> print(obs["text_skills"])
 dagger: Basic, knife: Basic, axe: Skilled, pick-axe: Basic, short sword: Skilled, broadsword: Skilled, long sword: Expert, two-handed sword: Skilled, scimitar: Basic, saber: Skilled, club: Basic, mace: Skilled, morning star: Skilled, flail: Basic, hammer: Basic, polearms: Skilled, spear: Skilled, trident: Basic, lance: Expert, bow: Basic, crossbow: Skilled, attack spells: Skilled, healing spells: Skilled, clerical spells: Skilled, martial arts: Expert, two weapon combat: Skilled, riding: Expert
+>>> print(obs["text_prayer"])
+Never prayed.
+God is not angry at you.
 ```
 
 ### Potential additions for tracking state in nethack:
@@ -97,11 +102,3 @@ some of them can be easily tracked with messages https://nethackwiki.com/wiki/Yo
     - magic resistance
     - life saving
     - waterwalking
-
-- prayer - factors that affect prayer in NetHack
-    - prayer timeout (starts at 300, then is a random number~[200,1000])
-    - alignment record (negative don't pray)
-    - luck (negarive don't pray)
-    - gods anger (if angry don't pray)
-    - polymorphy (don't pray when undead or a demon)
-    - gehennom (don't pray in hell)

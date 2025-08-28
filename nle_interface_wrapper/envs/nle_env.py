@@ -7,6 +7,7 @@ from nle_interface_wrapper.wrappers import (
     AddTextInventory,
     AddTextMap,
     AddTextOverview,
+    AddTextPrayer,
     AddTextSkills,
     AddTextSpells,
     AutoMore,
@@ -79,6 +80,7 @@ def create_env(env_name, cfg, env_config, render_mode=None):
     env = AddTextInventory(env)
     env = AddTextSpells(env)
     env = AddTextSkills(env)
+    env = AddTextPrayer(env)
 
     env = PlayNLE(env)
 
