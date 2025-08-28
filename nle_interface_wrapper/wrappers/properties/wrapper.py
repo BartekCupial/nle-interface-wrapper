@@ -15,6 +15,8 @@ class Properties(gym.Wrapper):
         super().__init__(env)
 
     def reset(self, **kwargs):
+        self.is_lycanthrope = False
+
         self.obs, self.info = self.env.reset(**kwargs)
         self.last_obs = self.obs
 
@@ -47,6 +49,14 @@ class Properties(gym.Wrapper):
         self.cursor = self.get_cursor(self.obs)
         self.entity = self.get_entity(self.obs)
         self.entities = self.get_entities(self.obs)
+
+        if "You feel feverish." in self.message:
+            self.is_lycanthrope = True
+        if "You feel purified." in self.message:
+            self.is_lycanthrope = False
+
+    def add_message(self, message):
+        self.obs["text_message"] += "\n" + message
 
     def get_blstats(self, last_obs) -> BLStats:
         return BLStats(*last_obs["blstats"])
@@ -86,6 +96,10 @@ class Properties(gym.Wrapper):
         monster_mask[blstats.y, blstats.x] = 0
 
         return [Entity(position, glyphs[position]) for position in list(zip(*np.where(monster_mask)))]
+
+    @property
+    def lycantropy(self):
+        return self.is_lycanthrope
 
     @property
     def engulfed(self):
