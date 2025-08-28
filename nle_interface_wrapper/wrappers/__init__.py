@@ -2,6 +2,7 @@ from nle_interface_wrapper.wrappers.auto_more import AutoMore
 from nle_interface_wrapper.wrappers.auto_render import AutoRender
 from nle_interface_wrapper.wrappers.auto_seed import AutoSeed
 from nle_interface_wrapper.wrappers.inventory import AddTextInventory
+from nle_interface_wrapper.wrappers.map import AddTextMap
 from nle_interface_wrapper.wrappers.no_progress_abort import NoProgressAbort
 from nle_interface_wrapper.wrappers.play_language import PlayLanguage
 from nle_interface_wrapper.wrappers.play_nle import PlayNLE

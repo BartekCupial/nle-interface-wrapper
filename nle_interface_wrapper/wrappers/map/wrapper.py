@@ -2,27 +2,96 @@ import re
 from collections import defaultdict
 from typing import Any, Dict, List
 
+import gymnasium as gym
 import numpy as np
+from nle.nethack import actions as A
 from scipy import ndimage
 
 from nle_interface_wrapper.interface.blstats import BLStats
 from nle_interface_wrapper.interface.entity import Entity
 from nle_interface_wrapper.interface.glyph import SHOP, G
-from nle_interface_wrapper.interface.map.label import corridor_detection, room_detection
-from nle_interface_wrapper.interface.map.level import Level
-from nle_interface_wrapper.interface.map.utils import get_revelable_positions
 from nle_interface_wrapper.interface.utils import isin
+from nle_interface_wrapper.wrappers.map.label import corridor_detection, room_detection
+from nle_interface_wrapper.wrappers.map.level import Level
+from nle_interface_wrapper.wrappers.map.utils import get_revelable_positions
 
 
-class Map:
-    def __init__(self):
+class AddTextMap(gym.Wrapper):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def cache_overview(self):
+        obs, *_ = self.env.step(self.env.actions.index(A.Command.OVERVIEW))
+        blstats: BLStats = self.get_blstats(obs)
+        message: str = self.get_message(obs)
+
+        self.overview = {
+            "message": message,
+            "dungeon_number": blstats.dungeon_number,
+            "depth": blstats.depth,
+        }
+
+    def get_cached_overview(self):
+        return self.overview["message"] if self.overview else ""
+
+    def cache_terrain(self):
+        self.env.step(self.env.actions.index(ord("#")))
+        self.env.step(self.env.actions.index(ord("t")))
+        self.env.step(self.env.actions.index(ord("e")))
+        self.env.step(self.env.actions.index(A.MiscAction.MORE))
+
+        obs, *_ = self.env.step(self.env.actions.index(ord("b")))
+        blstats: BLStats = self.get_blstats(obs)
+        glyphs: np.ndarray = self.get_glyphs(obs)
+
+        self.update_terrain_features(glyphs, blstats, force=True)
+
+        self.env.step(self.env.actions.index(A.Command.ESC))
+
+    def reset(self, **kwargs):
+        obs, info = self.env.reset(**kwargs)
+
         self.overview = {}
         self.terrain_features = defaultdict(dict)
         self.shops = defaultdict(list)
         self.levels = {}
         self.map_description = ""
+        self.overview = {}
 
-    def update(self, blstats: BLStats, message: str, glyphs, entity: Entity, entities: List[Entity]):
+        self.update()
+
+        self.cache_overview()
+        self.cache_terrain()
+
+        return self.populate_obs(obs), info
+
+    def step(self, action):
+        obs, reward, terminated, truncated, info = self.env.step(action)
+
+        self.update()
+
+        blstats: BLStats = self.env.get_wrapper_attr("blstats")
+        # update the overview when we go to a new level
+        if (blstats.dungeon_number, blstats.depth) != (self.overview["dungeon_number"], self.overview["depth"]):
+            self.cache_overview()
+
+        # update terrain features every 50 turns
+        last_time = self.terrain_features[(blstats.dungeon_number, blstats.level_number)].get("time", 0)
+        if blstats.time - last_time > 50:
+            self.cache_terrain()
+
+        return self.populate_obs(obs), reward, terminated, truncated, info
+
+    def populate_obs(self, obs):
+        return {**obs, "text_map": str(self)}
+
+    def update(self):
+        blstats: BLStats = self.env.get_wrapper_attr("blstats")
+        message: str = self.env.get_wrapper_attr("message")
+        glyphs: np.ndarray = self.env.get_wrapper_attr("glyphs")
+        entity: Entity = self.env.get_wrapper_attr("entity")
+        entities: List[Entity] = self.env.get_wrapper_attr("entities")
+
         self.current_level = self.get_current_level(blstats)
 
         self.current_level.update(glyphs, blstats)
@@ -51,11 +120,11 @@ class Map:
                 elif past_positions is not None and curr_positions is None:
                     # Current scan missed it -> carry past memory
                     current_features[key] = past_positions
+        else:
+            # update time only when force
+            self.terrain_features[(blstats.dungeon_number, blstats.level_number)]["time"] = blstats.time
 
-        self.terrain_features[(blstats.dungeon_number, blstats.level_number)] = {
-            "features": current_features,
-            "time": blstats.time,
-        }
+        self.terrain_features[(blstats.dungeon_number, blstats.level_number)]["features"] = current_features
 
     def get_terrain_features(self, glyphs) -> Dict[str, Any]:
         """

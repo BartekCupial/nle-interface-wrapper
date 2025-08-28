@@ -26,7 +26,10 @@ class AddTextInventory(gym.Wrapper):
         return self.populate_obs(obs), reward, terminated, truncated, info
 
     def update(self, obs):
-        if not self.hallu and not self.blind:
+        hallu = self.env.get_wrapper_attr("hallu")
+        blind = self.env.get_wrapper_attr("blind")
+
+        if not hallu and not blind:
             self.inventory.update(
                 obs["inv_strs"],
                 obs["inv_letters"],
@@ -36,8 +39,6 @@ class AddTextInventory(gym.Wrapper):
             )
 
     def populate_obs(self, obs):
-        print(str(self.inventory))
-
         return {
             **obs,
             "text_inventory": str(self.inventory),
