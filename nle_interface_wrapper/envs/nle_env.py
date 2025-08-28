@@ -13,7 +13,6 @@ from nle_interface_wrapper.wrappers import (
     AutoRender,
     AutoSeed,
     NoProgressAbort,
-    PlayLanguage,
     PlayNLE,
     Properties,
 )
@@ -81,9 +80,6 @@ def create_env(env_name, cfg, env_config, render_mode=None):
     env = AddTextSpells(env)
     env = AddTextSkills(env)
 
-    if cfg.play_mode == "language":
-        env = PlayLanguage(env)
-    elif cfg.play_mode == "nle":
-        env = PlayNLE(env)
+    env = PlayNLE(env)
 
     return env

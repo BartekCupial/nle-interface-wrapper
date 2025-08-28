@@ -27,7 +27,6 @@ class Args:
     save_ttyrec_every: Optional[int] = 0
     seed: Optional[int] = None
     render_mode: Optional[Literal["human", "rgb_array"]] = "human"
-    play_mode: Optional[Literal["nle", "language"]] = "language"
 
 
 def play(cfg):

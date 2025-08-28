@@ -5,7 +5,6 @@ from nle_interface_wrapper.wrappers.inventory import AddTextInventory
 from nle_interface_wrapper.wrappers.map import AddTextMap
 from nle_interface_wrapper.wrappers.no_progress_abort import NoProgressAbort
 from nle_interface_wrapper.wrappers.overview import AddTextOverview
-from nle_interface_wrapper.wrappers.play_language import PlayLanguage
 from nle_interface_wrapper.wrappers.play_nle import PlayNLE
 from nle_interface_wrapper.wrappers.properties import Properties
 from nle_interface_wrapper.wrappers.skills import AddTextSkills
