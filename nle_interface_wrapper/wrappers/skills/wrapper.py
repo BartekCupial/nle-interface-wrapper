@@ -26,7 +26,7 @@ class AddTextSkills(gym.Wrapper):
         return self.populate_obs(obs), reward, terminated, truncated, info
 
     def populate_obs(self, obs):
-        return {**obs, "text_known_spells": str(self)}
+        return {**obs, "text_skills": str(self)}
 
     def update(self):
         obs, *_ = self.env.step(self.env.actions.index(A.Command.ATTRIBUTES))
