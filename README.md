@@ -27,7 +27,7 @@ python -m nle_interface_wrapper.scripts.play --env NetHackScore-v0 --seed 42 --p
 import gymnasium as gym
 import nle
 
-from nle_interface_wrapper.wrappers import AddTextMap, AddTextOverview, AddTextInventory, Properties, AutoMore
+from nle_interface_wrapper.wrappers import Properties, AddTextMap, AddTextOverview, AddTextInventory, AddTextSpells, AddTextSkills, AutoMore
 
 env = gym.make("NetHackChallenge-v0")
 env = AutoMore(env)
@@ -36,11 +36,15 @@ env = Properties(env)
 env = AddTextOverview(env)
 env = AddTextMap(env)
 env = AddTextInventory(env)
+env = AddTextSpells(env)
+env = AddTextSkills(env)
 
 obs, info = env.reset()
 print(obs["text_overview"])
 print(obs["text_map"])
 print(obs["text_inventory"])
+print(obs["text_spells"])
+print(obs["text_skills"])
 ```
 
 ### Potential additions for tracking state in nethack:
@@ -75,7 +79,3 @@ some of them can be easily tracked with messages https://nethackwiki.com/wiki/Yo
     - gods anger (if angry don't pray)
     - polymorphy (don't pray when undead or a demon)
     - gehennom (don't pray in hell)
-
-- known spells 
-
-- current skills https://nethackwiki.com/wiki/Skill
